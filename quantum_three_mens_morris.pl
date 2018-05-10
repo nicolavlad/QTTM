@@ -112,13 +112,18 @@ cell(pos(X, Y)) :- member(X, [1, 2, 3]), member(Y, [1, 2, 3]).
 % valid_pairs(+State, +Color, -Pairs)
 
 valid_pairs(State, Color, Pairs) :-
+	% Iau toate celulele de pe tabla si le pun in List
 	findall((A, B), cell(pos(A, B)), List),
-	findall((X, Y),
+	findall((cell(pos(X, Y)), cell(pos(Z, T))),
 		(	member((X, Y), List),
-			\+member(classic(cell(pos(X, Y) ), _), State)
-			findall ((Z, T),
-				(	member((Z, T), List)
-		), 
+		   	member((Z, T), List),
+			% Eliminam celulele cu piese clasice
+			\+member(classic(pos(X, Y), _), State),
+			% Iau celulele cu conditia Cell1 @< Cell2
+			(Z >= X ; T >= Y), (Z \= X ; T \= Y),
+			% Eliminam piesa cuantica de aceeasi culoare
+			\+member(quantum(pos(X, Y), pos(Z, T), Color), State)
+		),
 		Pairs).
 
 %findall(Template, Goal, Bag).
