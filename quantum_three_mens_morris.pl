@@ -82,6 +82,7 @@
 
 % next_player/2
 % next_player(?Color1, ?Color2)
+
 next_player(black, white).
 next_player(white, black).
 
@@ -110,7 +111,21 @@ cell(pos(X, Y)) :- member(X, [1, 2, 3]), member(Y, [1, 2, 3]).
 % valid_pairs/3
 % valid_pairs(+State, +Color, -Pairs)
 
+valid_pairs(State, Color, Pairs) :-
+	findall((A, B), cell(pos(A, B)), List),
+	findall((X, Y),
+		(	member((X, Y), List),
+			\+member(classic(cell(pos(X, Y) ), _), State)
+			findall ((Z, T),
+				(	member((Z, T), List)
+		), 
+		Pairs).
 
+%findall(Template, Goal, Bag).
+
+% Trebuie sa nu avem pe un cell o piesa clasica
+% Sau pe cele doua cell-uri selectate sa nu facem un ciclu de doua
+% pozitii de aceeasi culoare
 
 % ----------------------------------------------------------------------
 
