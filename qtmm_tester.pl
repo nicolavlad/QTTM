@@ -145,7 +145,7 @@ qtmm_test(4, (test_state_5(S), valid_moves(S, black, Ps),
 	      \+ (member(Q, Qs), \+ (member(P, Ps), P == Q)))).
 
 qtmm_test(5, current_predicate(winner/2)).
-qtmm_test(5, (test_state_1(S), \+ winner(S, _))).
+\+ (member(Q, Qs), \+ (member(P, Ps), P == Q)))).qtmm_test(5, (test_state_1(S), \+ winner(S, _))).
 qtmm_test(5, (test_state_2(S), \+ winner(S, _))).
 qtmm_test(5, (test_state_3(S), \+ winner(S, _))).
 qtmm_test(5, (test_state_4(S), \+ winner(S, _))).

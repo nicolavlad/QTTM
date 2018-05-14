@@ -125,10 +125,6 @@ valid_pairs(State, Color, Pairs) :-
 		),
 		Pairs).
 
-% Trebuie sa nu avem pe un cell o piesa clasica
-% Sau pe cele doua cell-uri selectate sa nu facem un ciclu de doua
-% pozitii de aceeasi culoare
-
 % ----------------------------------------------------------------------
 
 % Cerința 4. Scrieți un predicat valid_moves(+State, +Color, -Moves)
@@ -144,6 +140,30 @@ valid_pairs(State, Color, Pairs) :-
 % valid_moves/3
 % valid_moves(+State, +Color, -Moves)
 
+% Acest predicat imi creeaza o lista cu piese cuantice, realizate
+% pe baza perechilor valid_pairs
+findQuantum(State, Color, Bag) :-
+	valid_pairs(State, Color, Pairs),
+	findall(quantum((X, Y), Color), member((X, Y), Pairs), Bag).
+
+% Daca predicatul dat nu are 3 argumente, inseamna ca avem o piesa
+% clasica si memoram al doilea argument in Color, altfel pe cel de
+% al treilea
+getColor(Piece, Color) :-
+	\+arg(3, Piece, Color) ->
+		arg(2, Piece, Color);
+		arg(3, Piece, Color).
+
+
+valid_moves(State, Color, Moves) :-
+	findQuantum(State, Color, QList),
+	findall(move(Piece, NewPiece),
+		(	member(Piece, State),
+			getColor(Piece, ColorOfPiece),
+			ColorOfPiece == Color,
+			member(NewPiece, QList)
+		),
+		Moves).
 
 % ----------------------------------------------------------------------
 
