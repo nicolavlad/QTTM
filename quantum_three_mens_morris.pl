@@ -144,7 +144,7 @@ valid_pairs(State, Color, Pairs) :-
 % pe baza perechilor valid_pairs
 findQuantum(State, Color, Bag) :-
 	valid_pairs(State, Color, Pairs),
-	findall(quantum((X, Y), Color), member((X, Y), Pairs), Bag).
+	findall(quantum(X, Y, Color), member((X, Y), Pairs), Bag).
 
 % Daca predicatul dat nu are 3 argumente, inseamna ca avem o piesa
 % clasica si memoram al doilea argument in Color, altfel pe cel de
@@ -154,14 +154,19 @@ getColor(Piece, Color) :-
 		arg(2, Piece, Color);
 		arg(3, Piece, Color).
 
-
 valid_moves(State, Color, Moves) :-
-	findQuantum(State, Color, QList),
 	findall(move(Piece, NewPiece),
 		(	member(Piece, State),
 			getColor(Piece, ColorOfPiece),
 			ColorOfPiece == Color,
-			member(NewPiece, QList)
+			findQuantum(State, Color, QList),
+			member(NewPiece, QList),
+			(	\+arg(3, Piece, _) -> true ;
+					quantum(X, Y, _) = Piece,
+					quantum(A, B, _) = NewPiece,
+					A \= X, A \= Y,
+					B \= X, B \= Y
+			)
 		),
 		Moves).
 
@@ -176,6 +181,13 @@ valid_moves(State, Color, Moves) :-
 % winner/2
 % winner(+State, -Colors)
 
+% winner(State, Colors) :-
+% 	findall (
+% 		(
+% 
+% 		),
+% 	Colors)
+% 	.
 
 
 % ----------------------------------------------------------------------
