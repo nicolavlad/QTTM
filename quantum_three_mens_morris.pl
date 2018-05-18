@@ -180,15 +180,51 @@ valid_moves(State, Color, Moves) :-
 
 % winner/2
 % winner(+State, -Colors)
-
-% winner(State, Colors) :-
-% 	findall (
-% 		(
-% 
-% 		),
-% 	Colors)
-% 	.
-
+winner(State, Colors) :-
+	findall(Color,
+	(
+		member(Color, [white, black]),
+		((	member(classic(pos(1, 1), Color), State),
+			member(classic(pos(1, 2), Color), State),
+			member(classic(pos(1, 3), Color), State)
+		);
+		(	member(classic(pos(2, 1), Color), State),
+			member(classic(pos(2, 2), Color), State),
+			member(classic(pos(2, 3), Color), State)
+		);
+		(
+			member(classic(pos(3, 1), Color), State),
+			member(classic(pos(3, 2), Color), State),
+			member(classic(pos(3, 3), Color), State)
+		);
+		(
+			member(classic(pos(1, 1), Color), State),
+			member(classic(pos(2, 1), Color), State),
+			member(classic(pos(3, 1), Color), State)
+		);
+		(
+			member(classic(pos(1, 2), Color), State),
+			member(classic(pos(2, 2), Color), State),
+			member(classic(pos(3, 2), Color), State)
+		);
+		(
+			member(classic(pos(1, 3), Color), State),
+			member(classic(pos(2, 3), Color), State),
+			member(classic(pos(3, 3), Color), State)
+		);
+		(
+			member(classic(pos(1, 1), Color), State),
+			member(classic(pos(2, 2), Color), State),
+			member(classic(pos(3, 3), Color), State)
+		);
+		(
+			member(classic(pos(1, 3), Color), State),
+			member(classic(pos(2, 2), Color), State),
+			member(classic(pos(3, 1), Color), State)
+		) )
+	),
+	Colors),
+	Colors \= [].
 
 % ----------------------------------------------------------------------
 
