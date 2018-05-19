@@ -1,0 +1,2 @@
+has_cycle
+Ultimul parametru din predicatul has_cycle reprezinta un flag ce ma ajuta la detectarea unui ciclu. Deoarece graful este neorientat, eu cand plec din sursa catre alt nod si apelez recursiv (acel nod se va intoarce in nodul sursa, ceea ce ar detecta un ciclu, si nu ar fi corect). Flag-ul imi verifica daca sunt la prima iteratie a lui cycle si ignor apelul recursiv ce se intoarce in nodul sursa, urmatoarele apeluri fiind facute prin Flag = 0.

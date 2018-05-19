@@ -249,20 +249,18 @@ cycle(Node, Node, _, _, _) :- !, true.
 cycle(_, Node, Visited, _, _) :- member(Node, Visited), !, fail.
 cycle(Node, Next, Visited, Edges, Flag) :-
 	member((Next, NextNext), Edges),
-	write('Node este '), writeln(Node),
-	write('Next este '), writeln(Next),
-	write('NextNext este '), writeln(NextNext), writeln(''),
 	( (Node == NextNext , Flag == 0) ; Node \= NextNext),
 	cycle(Node, NextNext, [Next|Visited], Edges, 0).
 
 has_cycle(State) :-
 	% Imi creez o lista de muchii de la o celula la alta bazata pe piesele cuantice
+	% DirectedEdges contine muchii orientate de la Cell1 la Cell2
 	findall((pos(X, Y), pos(Z, T)), member(quantum(pos(X, Y), pos(Z, T), _), State), DirectedEdges),
+	% ReverseEdges ne adauga si muchiile inverse celor orientat
 	findall((pos(X, Y), pos(Z, T)), member((pos(Z, T), pos(X, Y)), DirectedEdges), ReverseEdges),
-	append(DirectedEdges, ReverseEdges, Edges),
+	append(DirectedEdges, ReverseEdges, Edges),	% Edges reprezinta lista muchiilor "neorientate"
 	member((Node, Next), Edges),
-	writeln('TRANZITIE'),
-   	cycle(Node, Next, [Node], Edges, 1).
+   	cycle(Node, Next, [], Edges, 1).
 	
 % ----------------------------------------------------------------------
 
@@ -274,7 +272,27 @@ has_cycle(State) :-
 % collapse/4
 % collapse(+State, +Piece, +Cell, -NewState)
 
+solveCycle(State, Piece, Cell, VisitedCells, SolvedCycleState) :-
+	
+	.
 
+collapse(State, Piece, Cell, NewState) :-
+	solveCycle(State, Piece, Cell, VisitedCells, SolvedCycleState),
+	findall(Piece,
+		(	member(Piece, State),
+			\+arg(3, Piece, _) ->
+				(	arg(1, Piece, ClassicPosition),
+					\+member(ClassicPosition, VisitedCells)
+				);
+				(	arg(1, Piece, QuantumPos1),
+					arg(2, Piece, QuantumPos2),
+					\+member(QuantumPos1, VisitedCells),
+					\+member(QuantumPos2, VisitedCells)
+				)
+		),
+		LeftoverPieces),
+		append(SolvedCycleState, LeftoverPieces, NewState).
+	.
 % ----------------------------------------------------------------------
 % ----------------------------------------------------------------------
 
