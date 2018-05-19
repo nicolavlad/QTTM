@@ -245,19 +245,25 @@ winner(State, Colors) :-
 % has_cycle/1
 % has_cycle(+State)
 
-cycle(Node, Node, _, _) :- !, true.
-cycle(_, Node, Visited, _) :- member(Node, Visited), !, fail.
-cycle(Node, Next, Visited, Edges) :- member((Next, NextNext), Edges), cycle(Node, NextNext, [Next|Visited], Edges).
+cycle(Node, Node, _, _, _) :- !, true.
+cycle(_, Node, Visited, _, _) :- member(Node, Visited), !, fail.
+cycle(Node, Next, Visited, Edges, Flag) :-
+	member((Next, NextNext), Edges),
+	write('Node este '), writeln(Node),
+	write('Next este '), writeln(Next),
+	write('NextNext este '), writeln(NextNext), writeln(''),
+	( (Node == NextNext , Flag == 0) ; Node \= NextNext),
+	cycle(Node, NextNext, [Next|Visited], Edges, 0).
 
 has_cycle(State) :-
 	% Imi creez o lista de muchii de la o celula la alta bazata pe piesele cuantice
 	findall((pos(X, Y), pos(Z, T)), member(quantum(pos(X, Y), pos(Z, T), _), State), DirectedEdges),
 	findall((pos(X, Y), pos(Z, T)), member((pos(Z, T), pos(X, Y)), DirectedEdges), ReverseEdges),
 	append(DirectedEdges, ReverseEdges, Edges),
-	findall((Node, Next), (member((Node, Next), Edges), cycle(Node, Next, [Node], Edges)), List),
-	length(List, Len),
-	writeln(List),
-	(Len > 0 -> true ; fail).
+	member((Node, Next), Edges),
+	writeln('TRANZITIE'),
+   	cycle(Node, Next, [Node], Edges, 1).
+	
 % ----------------------------------------------------------------------
 
 % Cerința 7. Se cere scrierea unui predicat collapse(+State, +Piece,
